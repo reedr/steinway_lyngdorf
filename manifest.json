@@ -1,0 +1,14 @@
+{
+  "domain": "SL",
+  "name": "Steinway Lyngdorf AV Processor",
+  "version": "0.1.0",
+  "integration_type": "device",
+  "codeowners": [
+    "@reedr"
+  ],
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/SL",
+  "iot_class": "local_polling",
+  "quality_scale": "bronze",
+  "requirements": []
+}
