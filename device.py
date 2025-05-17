@@ -6,7 +6,7 @@ import re
 
 from homeassistant.core import HomeAssistant, callback
 
-from .const import SL_CONNECT_TIMEOUT, SL_LOGIN_TIMEOUT, SL_PORT, SL_ZEROCONF_TIMEOUT
+from .const import SL_CONNECT_TIMEOUT, SL_LOGIN_TIMEOUT, SL_PORT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ DEVICE_VOICING = "RPVOI"
 DEVICE_VOICINGS = "RPVOIS"
 DEVICE_VOICING_COUNT = "RPVOICOUNT"
 DEVICE_VOL = "VOL"
+DEVICE_VOL_RANGE = 400.0
 
 DEVICE_SUBS = (
     DEVICE_AUDIO_MODE,
@@ -239,7 +240,7 @@ class SLDevice:
         devvol = self._data.get(DEVICE_VOL)
         if devvol is None:
             return None
-        return (int(devvol) + 1000) / 1000.0
+        return (int(devvol) + DEVICE_VOL_RANGE) / DEVICE_VOL_RANGE
 
     @property
     def is_volume_muted(self) -> bool:
@@ -252,7 +253,7 @@ class SLDevice:
 
     async def async_set_volume_level(self, volume: float):
         """Set vol."""
-        await self.send_command(DEVICE_VOL, str(int(volume * 1000) - 1000))
+        await self.send_command(DEVICE_VOL, str(int((volume * DEVICE_VOL_RANGE) - DEVICE_VOL_RANGE)))
 
     async def async_volume_up(self):
         """Step up volume."""
