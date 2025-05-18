@@ -259,13 +259,13 @@ class SLDevice:
         """Step up volume."""
         vol = self.volume_level
         if vol is not None:
-            await self.async_set_volume_level(max(vol + 0.05, 1.0))
+            await self.async_set_volume_level(min(vol + 0.05, 1.0))
 
     async def async_volume_down(self):
         """Step down volume."""
         vol = self.volume_level
         if vol is not None:
-            await self.async_set_volume_level(min(vol - 0.05, 0))
+            await self.async_set_volume_level(max(vol - 0.05, 0))
 
     @property
     def sound_mode_list(self) -> list[str]:
