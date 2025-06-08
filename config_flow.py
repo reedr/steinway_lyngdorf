@@ -30,7 +30,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     raise CannotConnect
 
 
-class ConfigFlow(ConfigFlow, domain=DOMAIN):
+class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a config flow."""
 
     VERSION = 1
