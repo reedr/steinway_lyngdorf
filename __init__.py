@@ -10,7 +10,12 @@ from homeassistant.core import HomeAssistant
 from .coordinator import SLConfigEntry, SLCoordinator
 from .device import SLDevice
 
-_PLATFORMS: list[Platform] = [Platform.MEDIA_PLAYER, Platform.SELECT, Platform.SENSOR]
+_PLATFORMS: list[Platform] = [
+    Platform.MEDIA_PLAYER,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.NUMBER,
+]
 _LOGGER = logging.getLogger(__name__)
 
 

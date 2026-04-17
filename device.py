@@ -14,6 +14,7 @@ DEVICE_AUDIO_MODE = "AUDMODE"
 DEVICE_AUDIO_MODES = "AUDMODEL"
 DEVICE_AUDIO_MODE_COUNT = "AUDMODECOUNT"
 DEVICE_AUDIO_TYPE = "AUDTYPE"
+DEVICE_LIPSYNC = "LIPSYNC"
 DEVICE_MODEL = "DEVICE"
 DEVICE_MUTE = "MUTE"
 DEVICE_MUTEOFF = "MUTEOFF"
@@ -32,6 +33,7 @@ DEVICE_VOL_RANGE = 400.0
 DEVICE_SUBS = (
     DEVICE_AUDIO_MODE,
     DEVICE_AUDIO_TYPE,
+    DEVICE_LIPSYNC,
     DEVICE_MUTE,
     DEVICE_POWER,
     DEVICE_SOURCE,
@@ -246,6 +248,15 @@ class SLDevice:
     def is_volume_muted(self) -> bool:
         """Current mute."""
         return self._data.get(DEVICE_MUTE) == DEVICE_MUTEON
+
+    @property
+    def lipsync(self) -> int:
+        """Current lipsync."""
+        return int(self._data.get(DEVICE_LIPSYNC))
+
+    async def async_set_lipsync(self, lipsync: int):
+        """Set lipsync."""
+        await self.send_command(DEVICE_LIPSYNC, str(lipsync))
 
     async def async_mute_volume(self, mute: bool):
         """Set mute."""
