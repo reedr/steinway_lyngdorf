@@ -117,6 +117,9 @@ class SLDevice:
 
     async def _connect(self, test: bool = False) -> bool:
         """Open the socket and run the handshake. Caller holds _conn_lock."""
+        if self._closing:
+            return False
+
         writer = None
         try:
             _LOGGER.debug("Establish new connection to %s", self._host)
@@ -141,6 +144,11 @@ class SLDevice:
                 await self._close_writer(writer)
                 return True
 
+            if self._closing:
+                # Shutdown started while we were handshaking.
+                await self._close_writer(writer)
+                return False
+
             self._reader = reader
             self._writer = writer
             self._last_rx = time.monotonic()
@@ -151,6 +159,9 @@ class SLDevice:
             if self._callback is not None:
                 # We have been up before: this is a reconnect, so the device
                 # needs its subscriptions and our state needs a refresh.
+                stale = self._resumer
+                if stale is not None and stale is not asyncio.current_task():
+                    stale.cancel()
                 self._resumer = asyncio.create_task(self._resume())
 
         except (
@@ -222,6 +233,9 @@ class SLDevice:
         if self._keepalive is not None and self._keepalive is not current:
             self._keepalive.cancel()
         self._keepalive = None
+        if self._resumer is not None and self._resumer is not current:
+            self._resumer.cancel()
+        self._resumer = None
 
         if was_online and self._callback is not None:
             # Let the entities go unavailable instead of silently lying.
